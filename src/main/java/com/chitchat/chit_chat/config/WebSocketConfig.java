@@ -9,9 +9,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 import lombok.NonNull;
 
 @Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
-
+@EnableWebSocketMessageBroker // Enables STOMP/WebSocket messaging in Spring.
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{ //WebSocketMessageBrokerConfigurer: Provides configuration hooks.
     @Override
     public void configureMessageBroker(@ NonNull MessageBrokerRegistry config) {
         // Enable simple broker for group and private messages
@@ -27,3 +26,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
                 .withSockJS();
     }
 }
+
+// Enables message broker: Acts like a message queue for WebSocket messages.
+// Registers endpoints (/ws): Entry point for WebSocket handshake.
+// Configures broker prefixes:
+    // "/app": For incoming messages mapped to controller methods (@MessageMapping)
+    // "/topic": For public broadcasts
+    // "/queue" and "/user": For private messaging
+    // "/user" also used for routing user-specific destinations

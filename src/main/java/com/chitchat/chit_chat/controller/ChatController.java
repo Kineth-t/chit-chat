@@ -2,6 +2,8 @@ package com.chitchat.chit_chat.controller;
 
 import java.time.LocalDateTime;
 
+import javax.swing.Spring;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -15,6 +17,14 @@ import com.chitchat.chit_chat.model.MESSAGE_TYPE;
 import com.chitchat.chit_chat.repository.ChatMessageRepository;
 import com.chitchat.chit_chat.service.UserService;
 
+// Client connects to: ws://localhost:5147/ws
+// SimpMessageHeaderAccessor is a utility class in Spring WebSocket (under the org.springframework.messaging.simp package) that gives you access to STOMP message headers, including session-related metadata like session ID, user info, and custom attributes.
+    // It's commonly used in @MessageMapping methods to manage things like:
+    // Session attributes (e.g., storing the username when a user joins)
+    // Getting the session ID
+    // Working with custom headers
+
+
 @Controller
 public class ChatController {
     @Autowired
@@ -24,8 +34,8 @@ public class ChatController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("chat.addUser")
-    @SendTo("/topic/public")
+    @MessageMapping("chat.addUser") // Handles messages to: /app/chat.addUser
+    @SendTo("/topic/public")        // Broadcasts to: /topic/public
     public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
         if(userService.userExists(chatMessage.getSender())) {
             // Store username in session
@@ -62,6 +72,7 @@ public class ChatController {
     }
 
     @MessageMapping("chat.sendPrivateMessage")
+    // No @SendTo, because using SimpMessagingTemplate to send messages manually.
     public void sendPrivateMessage(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
         if(userService.userExists(chatMessage.getSender()) && userService.userExists(chatMessage.getReceiver())) {
             if(chatMessage.getTimestamp() == null) {
