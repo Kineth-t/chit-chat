@@ -11,6 +11,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.chitchat.chit_chat.model.ChatMessage;
+import com.chitchat.chit_chat.model.MESSAGE_TYPE;
 import com.chitchat.chit_chat.repository.ChatMessageRepository;
 import com.chitchat.chit_chat.service.UserService;
 
@@ -70,6 +71,8 @@ public class ChatController {
             if(chatMessage.getContent() == null) {
                 chatMessage.setContent("");
             }
+
+            chatMessage.setType(MESSAGE_TYPE.PRIVATE);
 
             ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
             System.out.println("Message saved successfully with id: " + savedMessage.getId());
