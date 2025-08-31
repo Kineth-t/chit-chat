@@ -12,8 +12,8 @@ import jakarta.transaction.Transactional;
 public interface UserRepository extends JpaRepository<User, Long> {
     public boolean existsByUsername(String username);
 
-    @Transactional
-    @Modifying
+    @Transactional // Ensure the operation is executed within a transaction. Without this, changes may not be committed to the database.
+    @Modifying // Tells Spring Data JPA that the query is not a SELECT query.
     @Query("UPDATE User u SET u.online = :isOnline WHERE u.username = :username")
     public void updateUserOnlineStatus(@Param("username")String username, @Param("isOnline") boolean isOnline);
 }

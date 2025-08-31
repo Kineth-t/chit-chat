@@ -1,6 +1,7 @@
 package com.chitchat.chit_chat.controller;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import javax.swing.Spring;
 
@@ -38,8 +39,15 @@ public class ChatController {
     @SendTo("/topic/public")        // Broadcasts to: /topic/public
     public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
         if(userService.userExists(chatMessage.getSender())) {
+            Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
+
+            if (sessionAttributes == null) {
+                System.err.println("Session attributes are null for session ID: " + headerAccessor.getSessionId());
+                return null;
+            }
+
             // Store username in session
-            headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+            sessionAttributes.put("username", chatMessage.getSender());
             userService.setUserOnlineStatus(chatMessage.getSender(), true);
 
             System.out.println("User " + chatMessage.getSender() + " connected into session id(" + headerAccessor.getSessionId() + ")");
