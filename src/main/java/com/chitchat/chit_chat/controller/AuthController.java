@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chitchat.chit_chat.dto.LoginRequestDTO;
+import com.chitchat.chit_chat.dto.LoginResponseDTO;
 import com.chitchat.chit_chat.dto.RegisterRequestDTO;
 import com.chitchat.chit_chat.dto.UserDTO;
 import com.chitchat.chit_chat.model.User;
@@ -39,8 +40,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<UserDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
-        LoginRequestDTO loginResponseDTO = authenticationService.login(loginRequestDTO);
-        ResponseCookie responseCookie = ResponseCookie.from("JWT", loginRequestDTO.getToken())
+        LoginResponseDTO loginResponseDTO = authenticationService.login(loginRequestDTO);
+        ResponseCookie responseCookie = ResponseCookie.from("JWT", loginResponseDTO.getToken())
             .httpOnly(true)
             .secure(true)
             .path("/")
