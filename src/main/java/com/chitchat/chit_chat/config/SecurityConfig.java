@@ -24,17 +24,17 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.chitchat.chit_chat.jwt.JwtAuthenticationFilter;
 import com.chitchat.chit_chat.service.CustomUserDetailsService;
 
-@Configuration
-@EnableWebSecurity
+@Configuration // Marks this as a Spring configuration class that defines beans
+@EnableWebSecurity // Enables Spring Security's web security support
 public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-            .headers(header -> header.frameOptions(frameOption -> frameOption.disable()))
-            .cors(cors -> cors.configurationSource(addConfigurationSource()))
+        http.csrf(csrf -> csrf.disable()) // Disables CSRF protection (common for APIs using JWT)
+            .headers(header -> header.frameOptions(frameOption -> frameOption.disable())) //  Allows the app to be embedded in frames (needed for H2 console)
+            .cors(cors -> cors.configurationSource(addConfigurationSource())) // Enables CORS using the custom configuration source
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/h2-console/**").permitAll()
@@ -59,12 +59,14 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
+        // Creates a DAO-based provider that uses own UserDetailsService and password encoder
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(userDetailsService());
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
 
         return daoAuthenticationProvider;
     }
 
+    // Spring Security's main authentication coordinator
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
@@ -73,13 +75,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource addConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOriginPatterns(Arrays.asList("*"));
+        corsConfiguration.setAllowedOriginPatterns(Arrays.asList("*")); // Allows requests from any origin
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setExposedHeaders(Arrays.asList("Set-cookie"));
+        corsConfiguration.setAllowCredentials(true); // Allows cookies/credentials in requests
+        corsConfiguration.setExposedHeaders(Arrays.asList("Set-cookie")); // Exposes Set-Cookie header to client
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
+        source.registerCorsConfiguration("/**", corsConfiguration); // Applies CORS config to all endpoints
         return source;
     }
 }
