@@ -1,5 +1,6 @@
 package com.chitchat.chit_chat.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     public void updateUserOnlineStatus(@Param("username")String username, @Param("isOnline") boolean isOnline);
 
     public Optional<User> findByUsername(String username);
+
+    public List<User> findByIsOnlineTrue();
 }
