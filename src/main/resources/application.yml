@@ -12,6 +12,6 @@ spring:
     h2:
         console:
             enabled: true
-    jwt:
-        secret:
-        expiration:
+jwt:
+    secret:
+    expiration:

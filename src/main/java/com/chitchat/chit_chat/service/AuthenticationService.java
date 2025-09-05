@@ -16,7 +16,6 @@ import com.chitchat.chit_chat.dto.LoginRequestDTO;
 import com.chitchat.chit_chat.dto.LoginResponseDTO;
 import com.chitchat.chit_chat.dto.RegisterRequestDTO;
 import com.chitchat.chit_chat.dto.UserDTO;
-import com.chitchat.chit_chat.jwt.JwtAuthenticationFilter;
 import com.chitchat.chit_chat.jwt.JwtService;
 import com.chitchat.chit_chat.model.User;
 import com.chitchat.chit_chat.repository.UserRepository;
