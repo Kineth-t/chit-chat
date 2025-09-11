@@ -1,6 +1,8 @@
 package com.chitchat.chit_chat.controller;
 
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,8 @@ import com.chitchat.chit_chat.service.AuthenticationService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -52,6 +56,15 @@ public class AuthController {
         return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                     .body(loginResponseDTO.getUserDTO()); 
+    }
+
+    @GetMapping("/getonlineusers")
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+    
+    public ResponseEntity<Map<String, Object>> getOnlineUsers() {
+        return ResponseEntity.ok(authenticationService.getOnlineUsers());
     }
 
     @PostMapping("/logout")
